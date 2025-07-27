@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ t }}</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/style.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/emoji.css') }}">
+	<script src="{{ url_for('static', filename='assets/twemoji.min.js') }}"></script>  
+	<script src="{{ url_for('static', filename='assets/emoji.js') }}"></script>
+	<style>
+		body {
+			background-color: white;
+			margin: 0;
+			padding: 0;
+			font-family: Arial, sans-serif;
+		}
+		h1 {
+			font-family: "Black", Gadget, sans-serif;
+			text-align: center;
+			margin-top: 20px;
+		}
+		ul {
+			text-align: center;
+			list-style-type: none;
+			padding: 0;
+		}
+		ul li {
+			display: inline-block;
+			margin: 0 10px;
+		}
+		form {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: calc(100vh - 120px); /* Trừ phần tiêu đề và menu */
+		}
+		table.none {
+			background: #f9f9f9;
+			padding: 30px;
+			border-radius: 12px;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+		}
+		table input, table textarea, table select {
+			width: 100%;
+			padding: 8px;
+			margin-bottom: 12px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+		button {
+			width: 100%;
+			padding: 10px;
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+		}
+		button:hover {
+			background-color: #45a049;
+		}
+	</style>
+</head>
+<body>
+	<h1>{{ h }}</h1>
+
+	<ul>
+		<li><a href="/list" class="{{ a1 }}">Tất cả</a></li>
+	</ul>
+	<hr>
+
+	<form action="/action3" method="POST">
+		<input type="hidden" name="_id" value="{{ task['_id'] }}">
+		<table class="none">
+			<tr><td><h2 style="text-align:center;">Cập nhật nhân viên</h2></td></tr>
+			<tr><td><input type="text" name="name" value="{{ task['name'] }}" placeholder="Họ và tên" required></td></tr>
+			<tr><td><textarea name="desc" rows="2" cols="30" placeholder="Email" required>{{ task['desc'] }}</textarea></td></tr>
+			<tr><td><input type="date" name="date" value="{{ task['date'] }}"></td></tr>
+			<tr>
+				<td>
+					<select name="pr" required>
+						<option disabled value="">Giới tính</option>
+						<option value="Nam" {% if task['pr'] == 'Nam' %}selected{% endif %}>Nam</option>
+						<option value="Nữ" {% if task['pr'] == 'Nữ' %}selected{% endif %}>Nữ</option>
+					</select>
+				</td>
+			</tr>
+			<tr><td><input type="text" name="phone" value="{{ task['phone'] }}" placeholder="Số điện thoại"></td></tr>
+			<tr><td><input type="text" name="address" value="{{ task['address'] }}" placeholder="Địa chỉ"></td></tr>
+			<tr><td><input type="text" name="department" value="{{ task['department'] }}" placeholder="Phòng ban"></td></tr>
+			<tr><td><input type="text" name="position" value="{{ task['position'] }}" placeholder="Chức vụ"></td></tr>
+			<tr><td><button type="submit">Cập nhật</button></td></tr>
+		</table>
+	</form>
+</body>
+</html>
