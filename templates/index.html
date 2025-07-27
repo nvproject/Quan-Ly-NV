@@ -1,116 +1,215 @@
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>{{t}}</title>
-		<!-- href="/static/assets/style.css"-->
-		<link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='assets/style.css')}}" >
-		<link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='assets/emoji.css')}}" >
-		<script src="{{ url_for('static',filename='assets/twemoji.min.js')}}"></script>  
-		<script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
-	</head>
+<head>
+	<title>{{ t }}</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='assets/style.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='assets/emoji.css')}}">
+	<script src="{{ url_for('static',filename='assets/twemoji.min.js')}}"></script>  
+	<script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
+
+	<style>
+	
+	th:nth-child(1), td:nth-child(1) { width: 90px; }/*mã nhân viên*/
+	th:nth-child(2), td:nth-child(2) { width: 145px; }/*họ và tên*/
+	th:nth-child(3), td:nth-child(3) { width: 170px; }/*email*/
+	th:nth-child(4), td:nth-child(4) { width: 80px; }/*ngày sinh*/
+	th:nth-child(5), td:nth-child(5) { width: 45px; }/*giới tính*/
+	th:nth-child(6), td:nth-child(6) { width: 90px; }/*điện thoại*/
+	th:nth-child(7), td:nth-child(7) { width: 165px; }/*địa chỉ*/
+	th:nth-child(8), td:nth-child(8) { width: 80px; }/*phòng ban*/
+	th:nth-child(9), td:nth-child(9) { width: 80px; }/*chức vụ*/
+	th:nth-child(1), td:nth-child(1), 
+	th:nth-child(2), td:nth-child(2), 
+	th:nth-child(3), td:nth-child(3), 
+	th:nth-child(4), td:nth-child(4), 
+	th:nth-child(5), td:nth-child(5), 
+	th:nth-child(6), td:nth-child(6),
+	th:nth-child(7), td:nth-child(7), 
+	th:nth-child(8), td:nth-child(8), 
+	th:nth-child(9), td:nth-child(9), 
+	th:nth-child(10), td:nth-child(10),
+	th:nth-child(11), td:nth-child(11) {
+		text-align: center;
+	}
+	th:nth-child(10), td:nth-child(10) { width: 45px; }/*xóa*/
+	th:nth-child(11), td:nth-child(11) { width: 60px; }/*chinh sửa*/
+
+	form.search-form {
+		display: inline-block;
+		font-size: 13px;
+	}
+	form.search-form input,
+	form.search-form select,
+	form.search-form button {
+		margin-left: 5px;
+	}
+	
+
+		body { font-size: 16px; }
+
+		.tab-menu {
+			list-style: none;
+			padding: 0;
+			display: flex;
+			gap: 10px;
+		}
+
+		.tab-menu li {
+			display: inline;
+		}
+
+		.tab-menu a {
+			text-decoration: none;
+			padding: 10px 15px;
+			background-color: #eee;
+			color: black;
+			border-radius: 5px;
+		}
+
+		.tab-menu a.active {
+			background-color: #3498db;
+			color: white;
+		}
+
+		.tab-content {
+			display: none;
+			margin-top: 20px;
+		}
+
+		.tab-content.active {
+			display: block;
+		}
+
+		table th, table td {
+			padding: 8px;
+			text-align: left;
+			font-size: 15px;
+		}
+
+		form.search-form {
+			display: inline-block;
+			font-size: 13px;
+		}
+	</style>
+</head>
 <body>
 	<h1>{{ h }}</h1>
-	<ul>
-		<li><a href="/list" class="{{ a1 }}">ALL</a></li>
-		<li><a href="/" class="{{ a2 }}">Uncompleted</a></li>
-		<li><a href="/completed" class="{{ a3 }}">Completed</a></li>
-		<li style="float:right"><a href="/about">About</a></li>
-	</ul>
-	{% if error %}
-		<div class="alert alert-danger">
-	  		<strong>Error!</strong> {{ error }}
-		</div>
-	{% endif %}
-	<hr>
-	{% if todos[0] %}
-	<div span="right">
-	<form action="/search"	method="GET" >
-		<table class="none" id="close">
-		<tr>
-		<td></td><td></td>
-		<td><big><b>Search Reference:</b></big></td>
-		<td><select name="refer" required>
-			<option value="id">Unique ID</option>
-			<option value="name">Task Name</option>
-			<option value="desc">Description</option>
-			<option value="date">Date</option>
-			<option value="pr">Priority</option>
-		</select></td>
-		<td><input type="text" name="key" placeholder="Search Task" size="15" /></td>
-		<td><button type="submit">Search</button></td>
-		</tr>
-		</table>
-	</form>
-	</div>
-	<b><big>To-Do LIST :</big></b>
-	<table>
-	    <tr id="row">
-	    	<th class="status">Status</th>
-	    	<th class="name">Task Name</th>
-	    	<th class="desc">Description Name</th>
-	    	<th class="date">Date</th>
-	    	<th class="pr">Priority</th>
-		<th class="func1">Remove</th>
-		<th class="func2">Modify</th>
-	    </tr>
-	{% for todo in todos %}
-		<tr class="datas">
-			<td><a href="./done?_id={{ todo['_id'] }}"><input type="image" src="static/images/{{todo['done']}}.png" alt="Submit ME"></a></td>
-			<td class="name">{{ todo["name"] }}</td>
-			<td class="desc">{{ todo["desc"] }}</td>
-			<td class="date">{{ todo["date"] }}</td>
-			<td class="pr">{{ todo["pr"] }}</td>
-			<td class="func1"><a href="./remove?_id={{ todo['_id'] }}">🗑️</a></td>
-			<td class="func2"><a href="./update?_id={{ todo['_id'] }}">📝</a></td>
-		</tr>
-	{% endfor %}
-	</table>
-	{% else %}
-		<div class="danger">
-			<h4>No Tasks in the List !!</h4>
-		</div>
-	{% endif %}
-	<hr/>
-	<form action="/action" method="POST">
-	<table class="none">
-		<tr class="row success">
-			<td>
-				<h2>Add a Task</h2>
-			</td>
-		</tr>
-		<tr class="row">
-			<td class="col-2">
-				<input type="text" name="name" placeholder="Taskname" />
-			</td>
-		</tr>
-		<tr class="row">
-			<td class="col-4">
-				<textarea name="desc" rows="2" cols="30" placeholder="Enter Description here..." required></textarea>
-			</td>
-		</tr>
-		<tr class="row">
-			<td class="col-2">
-				<input type="date" name="date" placeholder="Date" />
-			</td>
-		</tr>
-		<tr class="row">
-			<td class="col-2">
-				<select name="pr">
-					<option selected disabled>Priority</option>
-					<option>Low !</option>
-					<option>Medium !!</option>
-					<option>High !!!</option>
-				</select>
-			</td>
-		</tr>
-		<tr class="row">
-			<td class="col-2">
-				<button type="submit"> Create </button>
-			</td>
-		</tr>
-	</table>
-	</form>
-	<script>
 
+	<!-- Tabs -->
+	<ul class="tab-menu">
+		<li><a href="#" class="tab-link active" data-tab="tab1">Tất cả</a></li>
+		<li><a href="#" class="tab-link" data-tab="tab2">Thêm nhân viên</a></li>
+	</ul>
+
+	<hr>
+
+	<!-- Tab 1: Danh sách -->
+	<div id="tab1" class="tab-content active">
+		{% if error %}
+			<div class="alert alert-danger">
+				<strong>Error!</strong> {{ error }}
+			</div>
+		{% endif %}
+
+		{% if todos[0] %}
+		<div style="text-align: right; margin-bottom: 10px;">
+			<form action="/search" method="GET" class="search-form">
+				<label><b>Tìm kiếm:</b></label>
+				<select name="refer" required>
+					<option value="id">Mã nhân viên</option>
+					<option value="name">Họ và tên</option>
+					<option value="desc">Email</option>
+					<option value="date">Ngày sinh</option>
+					<option value="pr">Giới tính</option>
+				</select>
+				<input type="text" name="key" placeholder="Từ khóa..." size="20" />
+				<button type="submit">Tìm kiếm</button>
+			</form>
+		</div>
+
+		<b><big>Danh sách nhân viên:</big></b>
+		<table>
+			<tr id="row">
+				<th>Mã nhân viên</th>
+				<th>Họ và tên</th>
+				<th>Email</th>
+				<th>Ngày sinh</th>
+				<th>Giới tính</th>
+				<th>SĐT</th>
+				<th>Địa chỉ</th>
+				<th>Phòng ban</th>
+				<th>Chức vụ</th>
+				<th>Xóa</th>
+				<th>Chỉnh sửa</th>
+			</tr>
+			{% for todo in todos %}
+			<tr class="datas">
+				<td>{{ todo["_id"] }}</td>
+				<td>{{ todo["name"] }}</td>
+				<td>{{ todo["desc"] }}</td>
+				<td>{{ todo["date"] }}</td>
+				<td>{{ todo["pr"] }}</td>
+				<td>{{ todo.get("phone", "") }}</td>
+				<td>{{ todo.get("address", "") }}</td>
+				<td>{{ todo.get("department", "") }}</td>
+				<td>{{ todo.get("position", "") }}</td>
+				<td><a href="{{ url_for('remove') }}?_id={{ todo['_id'] | string }}">🗑️</a></td>
+				<td><a href="./update?_id={{ todo['_id'] }}">📝</a></td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% else %}
+		<div class="danger">
+			<h4>Không có trong danh sách!</h4>
+		</div>
+		{% endif %}
+	</div>
+
+	<!-- Tab 2: Form thêm nhân viên -->
+	<div id="tab2" class="tab-content">
+		<form action="/action" method="POST">
+			<table class="none">
+				<tr><td><h2>Thêm nhân viên</h2></td></tr>
+				<tr><td><input type="text" name="name" placeholder="Nhập họ và tên" required /></td></tr>
+				<tr><td><textarea name="desc" rows="2" cols="20" placeholder="Nhập email" required></textarea></td></tr>
+				<tr><td><input type="date" name="date" placeholder="Nhập ngày sinh" /></td></tr>
+				<tr><td>
+					<select name="pr" required>
+						<option selected disabled value="">Giới tính</option>
+						<option value="Nam">Nam</option>
+						<option value="Nữ">Nữ</option>
+					</select>
+				</td></tr>
+				<tr><td><input type="text" name="phone" placeholder="Nhập số điện thoại" /></td></tr>
+				<tr><td><input type="text" name="address" placeholder="Nhập địa chỉ" /></td></tr>
+				<tr><td><input type="text" name="department" placeholder="Nhập phòng ban" /></td></tr>
+				<tr><td><input type="text" name="position" placeholder="Nhập chức vụ" /></td></tr>
+				<tr><td><button type="submit">Thêm</button></td></tr>
+			</table>
+		</form>
+	</div>
+
+	<!-- JavaScript để chuyển tab -->
+	<script>
+		const tabs = document.querySelectorAll('.tab-link');
+		const contents = document.querySelectorAll('.tab-content');
+
+		tabs.forEach(tab => {
+			tab.addEventListener('click', e => {
+				e.preventDefault();
+
+				tabs.forEach(t => t.classList.remove('active'));
+				tab.classList.add('active');
+
+				const tabId = tab.dataset.tab;
+				contents.forEach(content => {
+					content.classList.remove('active');
+					if (content.id === tabId) {
+						content.classList.add('active');
+					}
+				});
+			});
+		});
 	</script>
 </body>
 </html>
