@@ -8,7 +8,12 @@
 	<script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
 
 	<style>
-	
+	/* Giới hạn kích thước emoji khi được Twemoji thay thế */
+		img.emoji {
+			width: 20px;
+			height: 20px;
+			vertical-align: middle;
+		}
 	th:nth-child(1), td:nth-child(1) { width: 90px; }/*mã nhân viên*/
 	th:nth-child(2), td:nth-child(2) { width: 145px; }/*họ và tên*/
 	th:nth-child(3), td:nth-child(3) { width: 170px; }/*email*/
@@ -209,6 +214,12 @@
 					}
 				});
 			});
+		});
+		// Twemoji parsing (chuyển emoji thành ảnh nhỏ gọn)
+		twemoji.parse(document.body, {
+			folder: 'svg',
+			ext: '.svg',
+			attributes: () => ({ class: 'emoji' })
 		});
 	</script>
 </body>
